@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Three.js 3D Test</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #000; }
+    canvas { display: block; }
+  </style>
+
+</head>
+<body>
+  <canvas id="c"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('THREE', !!window.THREE, 'Orbit?', !!THREE.OrbitControls); // должно быть true true
+
+    const canvas = document.getElementById('c');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
+    camera.position.set(3,2,6);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const dir = new THREE.DirectionalLight(0xffffff, 1.1);
+    dir.position.set(3,5,2);
+    dir.castShadow = true;
+    scene.add(dir);
+
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(20,20),
+      new THREE.MeshStandardMaterial({ color: 0x202025, metalness:.2, roughness:.8 })
+    );
+    floor.rotation.x = -Math.PI/2;
+    floor.position.y = -1;
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    const draco = new THREE.DRACOLoader();
+    draco.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+
+    const loader = new THREE.GLTFLoader();
+    loader.setDRACOLoader(draco);
+
+    let model, mixer;
+    loader.load('model.glb', (gltf) => {
+      model = gltf.scene;
+      model.traverse(o => { if (o.isMesh){ o.castShadow = o.receiveShadow = true; }});
+      scene.add(model);
+      if (gltf.animations && gltf.animations.length){
+        mixer = new THREE.AnimationMixer(model);
+        mixer.clipAction(gltf.animations[0]).play();
+      }
+    });
+
+    let scrollY = 0;
+    window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth/window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    const clock = new THREE.Clock();
+    (function tick(){
+      const dt = clock.getDelta();
+      mixer && mixer.update(dt);
+      if (model) model.rotation.y = scrollY * 0.001;
+      controls.update();
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    })();
+  });
+  </script>
+</body>
+</html>
