@@ -1,0 +1,39 @@
+:root { --vh: 1vh; }
+
+* { box-sizing: border-box; }
+
+section {
+  min-height: calc(var(--vh) * 100);
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+section:nth-child(odd) {
+  background-color: #111;
+}
+
+canvas#model{
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 50vw;
+  height: 100vh;
+  transform: translateX(50vw) rotateZ(0deg) translateZ(0);
+  transform-origin: 50% 50%;
+  pointer-events: none;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+body {
+  margin: 0;
+  color: #111;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+.hero { background: #fafafa; }
+.feature { background: #f0f3ff; }
+.more { background: #f7fff3; }
+
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: #bbb; border-radius: 2px; }
