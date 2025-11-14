@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three.js 3D</title>
+  <link rel="stylesheet" href="css/style3.css">
+</head>
+<body>
+  <canvas id="model"></canvas>
+  <section>
+    <div class="colors">
+      <div class="group">
+        <input type="radio" name="color" id="color-1">
+        <label for="color-1">Orange</label>
+      </div>
+      <div class="group">
+        <input type="radio" name="color" id="color-2">
+        <label for="color-2">Blue</label>
+      </div>
+      <div class="group">
+        <input type="radio" name="color" id="color-2">
+        <label for="color-2">Grey</label>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+
+  <!-- загрузчики -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+  <!-- (если используются KTX2 и/или HDR окружение) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/KTX2Loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
+
+  <!-- если в glTF есть KHR_meshopt_compression -->
+  <script src="https://cdn.jsdelivr.net/npm/meshoptimizer@0.18.1/meshopt_decoder.js"></script>
+  
+  <script src="js/script3.js"></script>
+</body>
+</html>
